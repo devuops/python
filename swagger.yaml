@@ -1,0 +1,117 @@
+openapi: 3.0.1
+info:
+  title: FastApi
+  description: 'datascientist fastapi '
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: mous.bendjema@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/v1
+paths:
+  /question:
+    post:
+      summary: ajout d'une nouvelle question
+      operationId: addQuestion
+      requestBody:
+        description: question
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        405:
+          description: Invalid Question
+          content: {}
+      security:
+      - basic_auth: []
+      x-codegen-request-body-name: body
+  /questionnaire:
+    get:
+      summary: génère un nouveau questionnaire selon les paramètres
+      description: génère un nouveau questionnaire selon les paramètres
+      operationId: getQuestionnaire
+      parameters:
+      - name: subjects
+        in: query
+        description: la liste des subjects utilisés pour genererQuestionnaire
+        required: true
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+      - name: use
+        in: query
+        description: la liste des subjects utilisés pour genererQuestionnaire
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+        404:
+          description: le choix de type de test n'existe pas ou les subjects n'existe
+            pas
+          content: {}
+      security:
+      - basic_auth: []
+components:
+  schemas:
+    Questionnaire:
+      type: object
+      properties:
+        questions:
+          maxItems: 20
+          minItems: 5
+          type: array
+          items:
+            $ref: '#/components/schemas/Question'
+    Question:
+      required:
+      - correct
+      - question
+      - responseA
+      - responseB
+      - responseC
+      - subject
+      - use
+      type: object
+      properties:
+        question:
+          type: string
+        subject:
+          type: string
+        correct:
+          type: array
+          items:
+            type: string
+        use:
+          type: string
+        responseA:
+          type: string
+        responseB:
+          type: string
+        responseC:
+          type: string
+        responseD:
+          type: string
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic

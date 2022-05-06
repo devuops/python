@@ -1,0 +1,99 @@
+# Test your FastAPI endpoints
+
+POST http://127.0.0.1:8000/question
+Content-type: application/json
+Authorization: Basic admin 4dm1N
+Accept: application/json
+
+{
+  "question": "Que signifie le sigle No-SQL",
+  "subject": "BDD",
+  "correct": "A",
+  "use": "Test de positionnement",
+  "responseA": "Pas seulement SQL",
+  "responseB": "Pas de SQL",
+  "responseC": "Pas tout SQL",
+  "responseD": "BDD"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
+
+###
+POST http://127.0.0.1:8000/question
+Content-type: application/json
+Authorization: Basic admin toto
+Accept: application/json
+
+{
+  "question": "Que signifie le sigle No-SQL",
+  "subject": "BDD",
+  "correct": "A",
+  "use": "Test de positionnement",
+  "responseA": "Pas seulement SQL",
+  "responseB": "Pas de SQL",
+  "responseC": "Pas tout SQL",
+  "responseD": "BDD"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 403, "Response status is not 403");
+});
+%}
+
+###
+POST http://127.0.0.1:8000/questionnaire
+Content-type: application/json
+Authorization: Basic admin toto
+Accept: application/json
+
+{
+  "subjects": [
+    "BDD"
+  ],
+  "use": "Test de positionnement"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 401, "Response status is not 401");
+});
+%}
+
+###
+POST http://127.0.0.1:8000/questionnaire
+Content-type: application/json
+Authorization: Basic alice wonderland
+Accept: application/json
+
+{
+  "subjects": "BDD",
+  "use": "Test de positionnement"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 422, "Response status is not 422");
+});
+%}
+
+###
+POST http://127.0.0.1:8000/questionnaire
+Content-type: application/json
+Authorization: Basic alice wonderland
+Accept: application/json
+
+{
+  "subjects": ["BDD"],
+  "use": "Test de positionnement"
+}
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+});
+%}
