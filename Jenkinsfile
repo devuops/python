@@ -11,11 +11,13 @@ spec:
     imagePullPolicy: Always
     command:
     - cat
+    tty: true
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     imagePullPolicy: Always
     command:
     - cat
+    tty: true
     volumeMounts:
       - name: jenkins-docker-cfg
         mountPath: /kaniko/.docker
